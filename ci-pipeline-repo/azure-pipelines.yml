@@ -1,0 +1,65 @@
+trigger:
+- main
+
+variables:
+  acrName: myacrregistrys34e.azurecr.io
+  imageName: flask-app
+  tag: $(Build.BuildId)
+  gitopsRepo: https://dev.azure.com/<ORG-NAME>/<PROJECT-NAME>/_git/<REPO-NAME>
+  #ex: gitopsRepo: https://dev.azure.com/devops-learning-demo/terraform-assignment/_git/gitops-repo
+
+pool:
+ vmImage: 'ubuntu-latest'
+
+stages:
+
+# =======================
+# BUILD & PUSH IMAGE
+# =======================
+- stage: Build
+  jobs:
+  - job: BuildPush
+    steps:
+    - task: Docker@2
+      displayName: Build and Push Image
+      inputs:
+        containerRegistry: 'devacrconn'
+        repository: '$(imageName)'
+        command: 'buildAndPush'
+        Dockerfile: 'python-flask-app/Dockerfile'
+        tags: |
+          $(tag)
+
+# =======================
+# UPDATE GITOPS REPO
+# =======================
+- stage: GitOpsUpdate
+  dependsOn: Build
+  jobs:
+  - job: UpdateHelm
+    steps:
+
+    # Install yq (for YAML editing)
+    - script: |
+        sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+        sudo chmod +x /usr/bin/yq
+      displayName: Install yq
+
+    # Clone GitOps repo
+    - script: |
+        git clone https://$(PAT)@dev.azure.com/<ORG-NAME>/<PROJECT-NAME>/_git/<REPO-NAME>
+      displayName: Clone GitOps Repo
+
+    - script: |
+        cd gitops-repo/helm
+
+        # Update ONLY dev environment
+        yq -i '.image.tag = "$(tag)"' values.yaml
+
+        # git config user.email "devops@company.com"
+        # git config user.name "azure-devops"
+
+        git add values.yaml
+        git commit -m "Update image tag $(tag)"
+        git push
+      displayName: Update Helm values
