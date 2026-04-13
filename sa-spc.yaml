@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: <APP-NAMESPACE>
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: <APP-NAME>-sa
+  namespace: <APP-NAMESPACE>
+  annotations:
+    azure.workload.identity/client-id: <UMI-CLIENT-ID>
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: <APP-NAME>-kv
+  namespace: <APP-NAMESPACE>
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "false"
+    keyvaultName: <KEYVAULT-NAME>
+    tenantId: <TENANT-ID>
+    clientId: <UMI-CLIENT-ID>
+    cloudName: AzurePublicCloud
+    objects: |
+      array:
+        - |
+          objectName: username
+          objectType: secret
+	      - |
+          objectName: password
+          objectType: secret
