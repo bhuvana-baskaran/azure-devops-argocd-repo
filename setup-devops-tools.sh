@@ -27,6 +27,15 @@ sudo mv kubectl /usr/local/bin/
 kubectl version --client
 
 # -----------------------------
+# KUBELOGIN
+# -----------------------------
+curl -LO https://github.com/Azure/kubelogin/releases/latest/download/kubelogin-linux-amd64.zip
+unzip kubelogin-linux-amd64.zip
+sudo mv bin/linux_amd64/kubelogin /usr/local/bin/
+
+kubelogin --version
+
+# -----------------------------
 # DOCKER
 # -----------------------------
 echo "Installing Docker..."
