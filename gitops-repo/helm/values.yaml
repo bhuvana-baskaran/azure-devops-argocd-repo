@@ -1,0 +1,16 @@
+namespace: ns-myapp
+appName: flask-myapp
+replicas: 2
+image:
+  repository: devacrflaskapp.azurecr.io/flask-app
+  tag: "50"
+keyvaultName: "dev-keyvault-flaskapp"
+service:
+  type: ClusterIP
+  port: 5000
+# List of secrets to mount from Key Vault
+secrets:
+  - objectName: username
+    objectType: secret
+  - objectName: password
+    objectType: secret
