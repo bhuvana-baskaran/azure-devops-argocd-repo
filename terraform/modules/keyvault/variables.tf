@@ -1,0 +1,9 @@
+variable "kv_name" {}
+variable "rg_name" {}
+variable "location" {}
+variable "issuer" {}
+variable "vnet_id" {}
+variable "subnet_id" {}
+variable "tenant_id" {}
+variable "app_namespace" {}
+variable "app_name" {}

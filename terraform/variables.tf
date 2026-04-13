@@ -1,0 +1,13 @@
+variable "rg_name" {}
+variable "location" {} 
+variable "vnet_name" {}
+variable "subnet_name" {}
+variable "address_space" {}
+variable "aks_subnet_prefix" {}
+variable "aks_name" {}
+variable "dns_prefix" {}
+variable k8s_version {}
+variable "acr_name" {}
+variable "kv_name" {}
+variable "app_name" {}
+variable "app_namespace" {}
