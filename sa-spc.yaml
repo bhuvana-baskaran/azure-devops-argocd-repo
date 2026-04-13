@@ -23,7 +23,7 @@ spec:
     useVMManagedIdentity: "false"
     keyvaultName: <KEYVAULT-NAME>
     tenantId: <TENANT-ID>
-    clientId: <UMI-CLIENT-ID>
+    clientID: <UMI-CLIENT-ID>
     cloudName: AzurePublicCloud
     objects: |
       array:
